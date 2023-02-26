@@ -1,14 +1,6 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Tab Header</ion-title>
-
-        <Suspense>
-          <ThemeSwitcher />
-        </Suspense>
-      </ion-toolbar>
-    </ion-header>
+    <DefaultHeader />
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
@@ -16,13 +8,13 @@
         </ion-toolbar>
       </ion-header>
 
-      ssssss
+      <div class="main-page__body">qwe body</div>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { ThemeSwitcher } from "@/features/theme";
+import DefaultHeader from "@/components/DefaultHeader.vue";
 import {
   IonPage,
   IonHeader,
@@ -31,3 +23,11 @@ import {
   IonContent,
 } from "@ionic/vue";
 </script>
+
+<style lang="scss" scoped>
+.main-page {
+  &__body {
+    padding: var(--ion-space-5);
+  }
+}
+</style>
