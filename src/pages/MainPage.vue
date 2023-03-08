@@ -1,27 +1,15 @@
 <template>
-  <ion-page>
-    <DefaultHeader />
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Tab 1</ion-title>
-        </ion-toolbar>
-      </ion-header>
+  <div class="ion-page">
+    <IonContent class="ion-padding">
+      <div>main page content</div>
 
-      <div class="main-page__body">qwe body</div>
-    </ion-content>
-  </ion-page>
+      sdfsdfsd
+    </IonContent>
+  </div>
 </template>
 
 <script setup lang="ts">
-import DefaultHeader from "@/components/DefaultHeader.vue";
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-} from "@ionic/vue";
+import { IonContent } from "@ionic/vue";
 </script>
 
 <style lang="scss" scoped>

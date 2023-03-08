@@ -1,11 +1,16 @@
 <template>
-  <ion-page>
-    <ion-tabs>
+  <MenuMain />
+
+  <div class="ion-page" id="main-content">
+    <default-header />
+    <ion-content class="ion-padding">
       <ion-router-outlet></ion-router-outlet>
-    </ion-tabs>
-  </ion-page>
+    </ion-content>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { IonTabs, IonPage, IonRouterOutlet } from "@ionic/vue";
+import DefaultHeader from "@/components/DefaultHeader.vue";
+import MenuMain from "@/components/MenuMain.vue";
+import { IonRouterOutlet, IonContent } from "@ionic/vue";
 </script>
