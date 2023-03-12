@@ -1,29 +1,22 @@
 <template>
   <IonPage>
     <IonContent class="ion-padding">
-      <div>main page content</div>
+      <DebtList />
+      <!-- <div>main page content</div>
       <ion-button color="secondary">
-        <!-- <ion-icon slot="start" name="star"></ion-icon> -->
-        <ion-icon slot="start" name="battery-dead-outline"></ion-icon>
+        <ion-icon slot="start" :icon="batteryDeadOutline"></ion-icon>
         Left Icon
       </ion-button>
       <ion-button color="primary">Primary</ion-button>
       <ion-button color="secondary">Secondary</ion-button>
-      <IonButton @click="goAboutPage">go about</IonButton>
-      sdfsdfsd
+      sdfsdfsd -->
     </IonContent>
   </IonPage>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonButton, IonPage, IonIcon } from "@ionic/vue";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
-function goAboutPage() {
-  router.push({ name: "about" });
-}
+import { DebtList } from "@/widgets";
+import { IonContent, IonPage } from "@ionic/vue";
 </script>
 
 <style lang="scss" scoped>

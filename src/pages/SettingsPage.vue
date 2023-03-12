@@ -15,21 +15,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import {
   IonButton,
   IonContent,
-  IonHeader,
   IonItem,
   IonLabel,
   IonList,
-  IonMenu,
-  IonMenuToggle,
   IonPage,
-  IonRadio,
-  IonRadioGroup,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/vue";
 import { useRouter } from "vue-router";
 import { ThemeSwitcher } from "@/features/theme";

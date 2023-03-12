@@ -7,26 +7,17 @@
         </Transition>
       </ion-buttons>
       <ion-title>Header</ion-title>
-
-      <!-- <IonButtons slot="end">
-        <Suspense>
-          <ThemeSwitcher />
-        </Suspense>
-      </IonButtons> -->
     </ion-toolbar>
   </ion-header>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { ThemeSwitcher } from "@/features/theme";
 import {
   IonHeader,
   IonToolbar,
   IonTitle,
   IonButtons,
-  IonMenuButton,
-  IonNavLink,
   IonBackButton,
 } from "@ionic/vue";
 import { useRoute } from "vue-router";
