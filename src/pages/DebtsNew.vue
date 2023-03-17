@@ -1,7 +1,7 @@
 <template>
   <IonPage>
     <IonContent class="ion-padding">
-      <div>test page</div>
+      <div>New Debts Page</div>
     </IonContent>
   </IonPage>
 </template>

@@ -1,41 +1,42 @@
 <template>
-  <div class="debts-item">
-    <div class="debts-item__body">
-      <IonRow class="debts-item__row">
-        <IonCol size="4" class="debts-item__col debts-item__title">
-          <div>{{ debtType === "took" ? "Заемщики" : "Должники" }}:</div>
-        </IonCol>
-        <IonCol size="4" class="debts-item__col debts-item-people">
-          <div
-            v-for="debt in debts"
-            :key="debt.id"
-            class="debts-item-people__name"
-          >
-            {{ debt.people.name }}
-          </div>
-        </IonCol>
-        <IonCol size="4" class="debts-item__col debts-item-count">
-          <div
-            v-for="debt in debts"
-            :key="debt.id"
-            class="debts-item-count__number"
-          >
-            {{ debt.count }}
-          </div>
-        </IonCol>
-      </IonRow>
-    </div>
+  <ListItem class="debts-item" :class="{ 'debts-item--single': isSingleDebt }">
+    <IonRow class="debts-item__row">
+      <IonCol size="4" class="debts-item__col debts-item__title">
+        <div>{{ DebtsTitle[debtType] }}:</div>
+      </IonCol>
+      <IonCol size="4" class="debts-item__col debts-item__people">
+        <div
+          v-for="debt in debts"
+          :key="debt.id"
+          class="debts-item__people-name"
+        >
+          {{ debt.people.name }}
+        </div>
+      </IonCol>
+      <IonCol size="4" class="debts-item__col debts-item__count">
+        <div
+          v-for="debt in debts"
+          :key="debt.id"
+          class="debts-item__count-number"
+        >
+          {{ debt.count }}
+        </div>
+      </IonCol>
+    </IonRow>
 
-    <div class="debts-item__footer">
-      <IonRow class="ion-justify-content-center">
-        <div>{{ total }}</div>
-      </IonRow>
-    </div>
-  </div>
+    <template #footer>
+      <div v-if="!isSingleDebt" class="debts-item__footer">
+        <IonRow class="ion-justify-content-center">
+          <div>{{ total }}</div>
+        </IonRow>
+      </div>
+    </template>
+  </ListItem>
 </template>
 
 <script setup lang="ts">
-import { Debts, DebtType } from "@/share";
+import { DebtsTitle } from "../enums";
+import { Debts, DebtType, ListItem } from "@/shared";
 import { IonCol, IonRow } from "@ionic/vue";
 import { computed } from "vue";
 
@@ -46,6 +47,7 @@ interface DebtsItemProps {
 
 const props = defineProps<DebtsItemProps>();
 
+const isSingleDebt = computed(() => props.debts.length === 1);
 const total = computed(() => {
   const totalSum = props.debts.reduce(
     (prev, current) => (prev += current.count),
@@ -58,20 +60,16 @@ const total = computed(() => {
 
 <style lang="scss" scoped>
 .debts-item {
-  border-width: 1px;
-  margin-bottom: 20px;
-  border-style: solid;
-  min-height: 100px;
-  padding: var(--ion-space-2);
-
-  &:last-child {
-    margin-bottom: 0;
+  &--single {
+    .debts-item__count-number {
+      font-size: 18px;
+    }
   }
-
-  &__body {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+  &__footer {
+    padding-top: 15px;
+    font-size: 18px;
+    border-top-width: 1px;
+    border-top-style: solid;
   }
 
   &__title {
@@ -82,8 +80,8 @@ const total = computed(() => {
   &__row {
     flex: 1;
   }
-  &-people {
-    &__name {
+  &__people {
+    &-name {
       text-align: center;
       margin-bottom: var(--ion-space-2);
 
@@ -92,8 +90,8 @@ const total = computed(() => {
       }
     }
   }
-  &-count {
-    &__number {
+  &__count {
+    &-number {
       text-align: right;
 
       margin-bottom: var(--ion-space-2);

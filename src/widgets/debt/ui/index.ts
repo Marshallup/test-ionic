@@ -1,1 +1,1 @@
-export { default as DebtList } from "./DebtList.vue";
+export { default as DebtsList } from "./DebstList.vue";
