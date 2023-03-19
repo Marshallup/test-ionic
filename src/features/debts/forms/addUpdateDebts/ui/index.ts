@@ -1,1 +1,1 @@
-export { default as addUpdateDebtsForm } from "./AddUpdateDebtsForm.vue";
+export { default as AddUpdateDebtsFormUi } from "./AddUpdateDebtsFormUi.vue";
