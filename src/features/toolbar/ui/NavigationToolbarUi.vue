@@ -35,6 +35,11 @@ import { LinkIconUi } from "@/shared";
 .navigation-toolbar-ui {
   &__link {
     user-select: none;
+    text-transform: uppercase;
+
+    :deep(.link-icon__content) {
+      font-size: 12px;
+    }
   }
 }
 </style>

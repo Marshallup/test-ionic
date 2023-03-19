@@ -1,5 +1,5 @@
 <template>
-  <IonFooter>
+  <IonFooter class="footer-ui">
     <IonToolbar>
       <IonGrid class="ion-padding-horizontal">
         <NavigationToolbarUi />
@@ -13,4 +13,8 @@ import { IonFooter, IonGrid, IonToolbar } from "@ionic/vue";
 import { NavigationToolbarUi } from "@/features";
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.footer-ui {
+  padding: 0 4px;
+}
+</style>

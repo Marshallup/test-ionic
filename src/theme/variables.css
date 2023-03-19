@@ -154,7 +154,7 @@ body.dark {
   --ion-color-light-shade: #1e2023;
   --ion-color-light-tint: #383a3e;
 
-  --box-shadow-primary: 0px 0px 4px 0px rgba(96, 96, 96, 0.35);
+  --box-shadow-primary: 0px 0px 4px 0px rgba(96, 96, 96, 0.7);
 }
 
 /*

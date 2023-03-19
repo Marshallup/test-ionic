@@ -1,12 +1,30 @@
 <template>
   <ion-header>
     <ion-toolbar>
-      <ion-buttons slot="start">
+      <ion-buttons slot="start" class="header-ui__btns-start">
         <Transition>
-          <IonBackButton v-if="!isMainPage" default-href="/"></IonBackButton>
+          <IonBackButton
+            v-if="!isMainPage"
+            default-href="/"
+            class="header-ui__back-btn"
+          ></IonBackButton>
         </Transition>
       </ion-buttons>
-      <ion-title>Header</ion-title>
+      <ion-title>
+        <div class="header-ui__total-statistics">
+          <div
+            class="header-ui__total-statistics-item header-ui__total-statistics-item--borrowed"
+          >
+            -100
+          </div>
+          <div class="header-ui__total-statistics-hr">|</div>
+          <div
+            class="header-ui__total-statistics-item header-ui__total-statistics-item--took"
+          >
+            200
+          </div>
+        </div>
+      </ion-title>
     </ion-toolbar>
   </ion-header>
 </template>
@@ -28,9 +46,32 @@ const isMainPage = computed(() => route.name === "main");
 </script>
 
 <style lang="scss" scoped>
-.default-header {
-  &__body {
-    margin-right: var(--ion-space-2);
+.header-ui {
+  &__btns-start.md {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  &__total-statistics {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 500;
+
+    &-item {
+      &--took {
+        color: var(--ion-color-success);
+      }
+      &--borrowed {
+        color: var(--ion-color-danger);
+      }
+    }
+
+    &-hr {
+      margin: 0 5px;
+    }
   }
 }
 
