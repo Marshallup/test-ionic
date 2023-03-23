@@ -6,8 +6,13 @@ export interface Debt {
   id: number;
   type: DebtType;
   people: People;
-  count: number;
+  sum: number;
+  created_at: string;
+  startDate: string;
+  endDate: string;
 }
+
+export type DebtTemplate = Omit<Debt, "id" | "created_at">;
 
 export type Debts = Debt[];
 

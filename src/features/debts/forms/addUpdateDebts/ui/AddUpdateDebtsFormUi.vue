@@ -56,8 +56,12 @@ import { useRouter } from "vue-router";
 import * as yup from "yup";
 import { toTypedSchema } from "@vee-validate/yup";
 import { useForm } from "vee-validate";
+import { debtModel } from "@/entities";
+import { useFirestore } from "vuefire";
 
 const router = useRouter();
+
+const db = useFirestore();
 
 const dataForm = reactive({
   name: "",
@@ -85,7 +89,21 @@ async function onSave() {
   console.log(valid, "isValidate");
 
   if (valid) {
-    await router.push({ name: "main" });
+    try {
+      await debtModel.addDebt(db, {
+        type: "borrowed",
+        people: {
+          id: 1,
+          name: dataForm.name,
+        },
+        startDate: dataForm.dateStart,
+        endDate: dataForm.dateEnd,
+        sum: dataForm.sum as unknown as number,
+      });
+      await router.push({ name: "main" });
+    } catch (error) {
+      console.log(error, "error");
+    }
   }
 }
 

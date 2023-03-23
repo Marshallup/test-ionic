@@ -1,4 +1,4 @@
 export * from "./ui";
-export * from "./models";
-export * from "./consts";
+export * from "./api";
+export * from "./config";
 export * from "./types";

@@ -1,6 +1,6 @@
 <template>
   <InputFormUi
-    v-model="value"
+    :model-value="inputeValue"
     :name="inputName"
     :label="label"
     :placeholder="placeholder"
@@ -41,9 +41,15 @@ import {
   IonButton,
   IonContent,
 } from "@ionic/vue";
-import { computed, ref, watch, toRef } from "vue";
+import { computed, ref, watch, toRef, unref } from "vue";
 import dayjs from "dayjs";
 import InputFormUi from "./InputFormUi.vue";
+
+const format = "DD.MM.YYYY";
+
+function getFormatedDate(date: string) {
+  return date ? dayjs(date).format(format) : "";
+}
 
 interface DatePickerProps {
   name: string;
@@ -54,6 +60,7 @@ interface DatePickerProps {
 }
 interface DatePickerEmits {
   (e: "update:modelValue", val: DatePickerProps["modelValue"]): void;
+  (e: "change", val: DatePickerProps["modelValue"], dateVal: Date): void;
 }
 
 const props = withDefaults(defineProps<DatePickerProps>(), {
@@ -67,7 +74,10 @@ const value = computed({
   get: () => props.modelValue,
   set: (val) => emit("update:modelValue", val),
 });
+
 const datePickerValue = ref("");
+
+const inputeValue = computed(() => getFormatedDate(unref(datePickerValue)));
 
 const isOpenModal = ref(false);
 
@@ -76,7 +86,9 @@ function setOpenModal(openVal: boolean) {
 }
 
 watch(datePickerValue, (pickerValue) => {
-  value.value = dayjs(pickerValue).format("DD.MM.YYYY");
+  value.value = pickerValue;
+
+  emit("change", unref(value), new Date(pickerValue));
 });
 </script>
 
