@@ -1,6 +1,7 @@
 {
-  "name": "test-ionic",
-  "version": "0.0.1",
+  "name": "debts-and-debts",
+  "description": "An Ionic project",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
@@ -25,12 +26,10 @@
     "@vee-validate/yup": "^4.8.3",
     "core-js": "^3.6.5",
     "dayjs": "^1.11.7",
-    "firebase": "^9.18.0",
     "ionicons": "^7.0.0",
     "vee-validate": "^4.8.3",
     "vue": "^3.2.21",
     "vue-router": "^4.0.12",
-    "vuefire": "^3.1.0",
     "yup": "^1.0.2"
   },
   "devDependencies": {
@@ -57,6 +56,5 @@
     "sass-loader": "^13.2.0",
     "ts-jest": "^27.0.7",
     "typescript": "^4.3.5"
-  },
-  "description": "An Ionic project"
+  }
 }

@@ -3,22 +3,22 @@ import { RouteRecordRaw } from "vue-router";
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    component: () => import("@/layouts/DefaultLayout.vue"),
+    component: () => import("@/pageLayouts/default/Ui.vue"),
     children: [
       {
         path: "",
         name: "main",
-        component: () => import("@/pages/MainPage.vue"),
+        component: () => import("@/pages/main/Ui.vue"),
       },
       {
-        path: "/settings",
+        path: "settings",
         name: "settings",
-        component: () => import("@/pages/SettingsPage.vue"),
+        component: () => import("@/pages/settings/Ui.vue"),
       },
       {
-        path: "/new",
-        name: "debts-new",
-        component: () => import("@/pages/DebtsNew.vue"),
+        path: "create-debt",
+        name: "createDebt",
+        component: () => import("@/pages/createDebt/Ui.vue"),
       },
     ],
   },
