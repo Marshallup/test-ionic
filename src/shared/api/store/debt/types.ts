@@ -1,9 +1,5 @@
-import { People } from "./People";
-
-export enum DEBT_TYPES {
-  took = "took",
-  borrowed = "borrowed",
-}
+import { People } from "../people";
+import { DEBT_TYPES } from "./enums";
 
 export type DebtType = `${DEBT_TYPES}`;
 

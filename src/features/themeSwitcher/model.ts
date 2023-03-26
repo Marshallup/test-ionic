@@ -1,11 +1,11 @@
-import { getThemeStore, setThemeStore } from "./store";
-import { THEMES, THEME_CLASSES } from "./enums";
+import { themeModel, THEMES } from "@/shared/api/store/theme";
+import { THEME_CLASSES } from "./enums";
 
 // Use matchMedia to check the user preference
 export const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
 
 export const isDarkTheme = async () => {
-  const themeNameStore = await getThemeStore();
+  const themeNameStore = await themeModel.getThemeStore();
 
   if (themeNameStore) {
     return themeNameStore === THEMES.black;
@@ -16,13 +16,13 @@ export const isDarkTheme = async () => {
 
 // Add or remove the "dark" class based on if the media query matches
 export async function toggleDarkTheme(shouldAdd: boolean) {
-  await setThemeStore(shouldAdd ? THEMES.black : THEMES.white);
+  await themeModel.setThemeStore(shouldAdd ? THEMES.black : THEMES.white);
 
   document.body.classList.toggle(THEME_CLASSES.dark, shouldAdd);
 }
 
 export async function initTheme() {
-  const theme = await getThemeStore();
+  const theme = await themeModel.getThemeStore();
 
   if (theme) {
     toggleDarkTheme(theme === THEMES.black);

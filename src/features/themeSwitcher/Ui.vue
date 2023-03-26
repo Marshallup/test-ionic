@@ -6,15 +6,15 @@
 import { IonToggle } from "@ionic/vue";
 import type { ToggleChangeEventDetail } from "@ionic/core";
 import { ref, watch } from "vue";
-import { themeModel } from ".";
+import { themeSwitcherModel } from ".";
 
-const isDark = ref(await themeModel.isDarkTheme());
+const isDark = ref(await themeSwitcherModel.isDarkTheme());
 
 function onChange(event: CustomEvent<ToggleChangeEventDetail>) {
   isDark.value = event.detail.checked;
 }
 
-watch(isDark, themeModel.toggleDarkTheme);
+watch(isDark, themeSwitcherModel.toggleDarkTheme);
 </script>
 
 <style scoped></style>

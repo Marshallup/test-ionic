@@ -1,4 +1,5 @@
-import { Debt, DebtType, People } from "@/shared/api";
+import { Debt, DebtType } from "@/shared/api/store/debt";
+import { People } from "@/shared/api/store/people";
 
 export type DebtPeopleInfo = Omit<Debt, "people"> & {
   people: People;

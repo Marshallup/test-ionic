@@ -1,5 +1,5 @@
-import { store } from "@/shared/api";
 import { GLOBAL_APP_PREFIX } from "@/shared/config";
+import { store } from "../instance";
 import { Theme } from "./types";
 
 export const THEME_KEY = `${GLOBAL_APP_PREFIX}theme`;

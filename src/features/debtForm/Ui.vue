@@ -16,7 +16,7 @@
         <DatePickerForm
           name="dateStart"
           v-model="dataForm.dateStart"
-          placeholder="DD.MM.YYYY"
+          placeholder="ДД.ММ.ГГГГ"
           label="Дата займа"
           :error="errors.dateStart"
         />
@@ -25,7 +25,7 @@
         <DatePickerForm
           name="dateEnd"
           v-model="dataForm.dateEnd"
-          placeholder="DD.MM.YYYY"
+          placeholder="ДД.ММ.ГГГГ"
           label="Дата возвращения"
           :error="errors.dateEnd"
         />
@@ -51,15 +51,15 @@
 </template>
 
 <script setup lang="ts">
-import { InputForm } from "@/shared/ui/form/input";
-import { DatePickerForm } from "@/shared/ui/form/datePicker";
-import { InputNumberForm } from "@/shared/ui/form/inputNumber";
-import { IonButton, IonCol, IonRow } from "@ionic/vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import * as yup from "yup";
 import { toTypedSchema } from "@vee-validate/yup";
 import { useForm } from "vee-validate";
+import { InputForm } from "@/shared/ui/form/input";
+import { DatePickerForm } from "@/shared/ui/form/datePicker";
+import { InputNumberForm } from "@/shared/ui/form/inputNumber";
+import { IonButton, IonCol, IonRow } from "@ionic/vue";
 
 const router = useRouter();
 
@@ -83,6 +83,7 @@ const schema = yup.object({
 const { errors, validate, resetForm } = useForm({
   validationSchema: toTypedSchema(schema),
 });
+
 async function onSave() {
   const { valid } = await validate();
 

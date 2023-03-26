@@ -1,5 +1,5 @@
 <template>
-  <IonList class="debts-list">
+  <IonList class="debt-list">
     <template v-for="debtItem in debts" :key="debtItem.id">
       <DebtItemSingle
         v-if="debtItem.type && Array.isArray(debtItem.debts)"
@@ -137,7 +137,7 @@ const debts = reactive<DebtItems>([
 </script>
 
 <style lang="scss" scoped>
-.debts-list {
+.debt-list {
   padding: 10px;
 }
 </style>
