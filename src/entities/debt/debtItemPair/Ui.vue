@@ -17,7 +17,7 @@
             :key="debtData.id"
             class="debts-item-multiple__item"
           >
-            <div>{{ debtData.people.name }}:&nbsp;</div>
+            <div>{{ debtData.people }}:&nbsp;</div>
             <div>{{ debtData.sum }}</div>
           </div>
         </div>
@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { computed, unref } from "vue";
 import { IonCol, IonRow } from "@ionic/vue";
-import { DEBT_TITLES, type DebtsByType } from "../";
+import { DEBT_TITLES, type DebtsByType } from "@/shared/api/store/debt";
 import { ListItem } from "@/shared/ui/listItem";
 
 interface DebtItemMultipleProps {

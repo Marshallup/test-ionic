@@ -2,7 +2,9 @@
   <ListItem class="debts-item" :class="{ 'debts-item--single': isSingleDebt }">
     <IonRow class="debts-item__row">
       <IonCol size="4" class="debts-item__col debts-item__title">
-        <div>{{ DEBT_TITLES[debtType] }}:</div>
+        <div>
+          {{ debts.length < 2 ? DEBT_TITLE[type] : DEBT_TITLES[type] }}:
+        </div>
       </IonCol>
       <IonCol size="4" class="debts-item__col debts-item__people">
         <div
@@ -10,7 +12,7 @@
           :key="debt.id"
           class="debts-item__people-name"
         >
-          {{ debt.people.name }}
+          {{ debt.people }}
         </div>
       </IonCol>
       <IonCol size="4" class="debts-item__col debts-item__count">
@@ -37,13 +39,19 @@
 <script setup lang="ts">
 import { IonCol, IonRow } from "@ionic/vue";
 import { computed } from "vue";
-import { DEBT_TITLES, DebtsPeopleInfo } from "../";
+// import { DebtsPeopleInfo } from "../types";
 import { ListItem } from "@/shared/ui/listItem";
-import { DebtType } from "@/shared/api";
+import {
+  type DebtType,
+  Debts,
+  DEBT_TITLE,
+  DEBT_TYPES,
+  DEBT_TITLES,
+} from "@/shared/api/store/debt";
 
 interface DebtsItemProps {
-  debts: DebtsPeopleInfo;
-  debtType: DebtType;
+  debts: Debts;
+  type: DebtType;
 }
 
 const props = defineProps<DebtsItemProps>();
@@ -55,7 +63,7 @@ const total = computed(() => {
     0
   );
 
-  return props.debtType === "took" ? totalSum : -totalSum;
+  return props.type === DEBT_TYPES.took ? totalSum : -totalSum;
 });
 </script>
 

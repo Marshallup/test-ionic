@@ -1,5 +1,5 @@
 <template>
-  <InputForm
+  <Input
     :model-value="inputeValue"
     :name="inputName"
     :label="label"
@@ -7,7 +7,11 @@
     readonly
     @click="setOpenModal(true)"
   >
-    <IonModal :is-open="isOpenModal" :keep-contents-mounted="true">
+    <IonModal
+      :is-open="isOpenModal"
+      :keep-contents-mounted="true"
+      @did-dismiss="onDismiss"
+    >
       <IonHeader>
         <IonToolbar>
           <IonTitle>{{ titlePicker }}</IonTitle>
@@ -27,7 +31,7 @@
         </div>
       </IonContent>
     </IonModal>
-  </InputForm>
+  </Input>
 </template>
 
 <script setup lang="ts">
@@ -41,26 +45,23 @@ import {
   IonButton,
   IonContent,
 } from "@ionic/vue";
-import { computed, ref, watch, toRef, unref } from "vue";
-import dayjs from "dayjs";
-import { InputForm } from "../input";
+import { computed, ref, watch, toRefs, unref } from "vue";
+import { Input } from "../../input";
+import { getFormatDate } from "./lib";
+import { useField } from "vee-validate";
 
 const format = "DD.MM.YYYY";
 
-function getFormatedDate(date: string) {
-  return date ? dayjs(date).format(format) : "";
-}
-
 interface DatePickerProps {
   name: string;
-  modelValue: string;
+  modelValue: Date | null;
   label?: string;
   placeholder?: string;
   titlePicker?: string;
 }
 interface DatePickerEmits {
   (e: "update:modelValue", val: DatePickerProps["modelValue"]): void;
-  (e: "change", val: DatePickerProps["modelValue"], dateVal: Date): void;
+  (e: "change", val: DatePickerProps["modelValue"]): void;
 }
 
 const props = withDefaults(defineProps<DatePickerProps>(), {
@@ -68,7 +69,7 @@ const props = withDefaults(defineProps<DatePickerProps>(), {
 });
 const emit = defineEmits<DatePickerEmits>();
 
-const inputName = toRef(props, "name");
+const { name: inputName } = toRefs(props);
 
 const value = computed({
   get: () => props.modelValue,
@@ -77,18 +78,40 @@ const value = computed({
 
 const datePickerValue = ref("");
 
-const inputeValue = computed(() => getFormatedDate(unref(datePickerValue)));
-
 const isOpenModal = ref(false);
+
+const inputeValue = computed(() =>
+  getFormatDate(unref(datePickerValue), format)
+);
+
+const { value: formValue, setValue } = useField(inputName, undefined, {
+  initialValue: unref(value),
+});
 
 function setOpenModal(openVal: boolean) {
   isOpenModal.value = openVal;
 }
 
-watch(datePickerValue, (pickerValue) => {
-  value.value = pickerValue;
+function onDismiss() {
+  isOpenModal.value = false;
+}
 
-  emit("change", unref(value), new Date(pickerValue));
+watch(datePickerValue, (pickerValue) => {
+  const dateJs = pickerValue ? new Date(pickerValue) : null;
+
+  value.value = dateJs;
+
+  setValue(dateJs);
+
+  emit("change", dateJs);
+});
+
+watch(formValue, (formValueClear) => {
+  value.value = formValueClear;
+
+  datePickerValue.value = formValueClear ? formValueClear.toString() : "";
+
+  emit("change", formValueClear);
 });
 </script>
 

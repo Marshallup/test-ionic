@@ -1,3 +1,3 @@
 export * from "./enums";
 export * from "./types";
-export * as DebtModel from "./model";
+export * as debtStoreModel from "./model";

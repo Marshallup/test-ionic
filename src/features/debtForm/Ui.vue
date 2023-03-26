@@ -1,10 +1,20 @@
 <template>
-  <form @submit.prevent="onSave">
+  <form class="debt-form" @submit.prevent="onSave">
+    <IonRow class="debt-form__row-types">
+      <IonSegment v-model="debtType">
+        <IonSegmentButton :value="DEBT_TYPES.took">{{
+          DEBT_TITLE.took
+        }}</IonSegmentButton>
+        <IonSegmentButton :value="DEBT_TYPES.borrowed">{{
+          DEBT_TITLE.borrowed
+        }}</IonSegmentButton>
+      </IonSegment>
+    </IonRow>
     <IonRow>
       <IonCol>
         <InputForm
           name="name"
-          v-model="dataForm.name"
+          v-model="values.name"
           label="Заемщик"
           :error="errors.name"
           placeholder="Введите имя"
@@ -14,20 +24,20 @@
     <IonRow>
       <IonCol size="6">
         <DatePickerForm
-          name="dateStart"
-          v-model="dataForm.dateStart"
+          name="startDate"
+          v-model="values.startDate"
           placeholder="ДД.ММ.ГГГГ"
           label="Дата займа"
-          :error="errors.dateStart"
+          :error="errors.startDate"
         />
       </IonCol>
       <IonCol size="6">
         <DatePickerForm
-          name="dateEnd"
-          v-model="dataForm.dateEnd"
+          name="endDate"
+          v-model="values.endDate"
           placeholder="ДД.ММ.ГГГГ"
           label="Дата возвращения"
-          :error="errors.dateEnd"
+          :error="errors.endDate"
         />
       </IonCol>
     </IonRow>
@@ -35,7 +45,7 @@
       <IonCol>
         <InputNumberForm
           name="sum"
-          v-model="dataForm.sum"
+          v-model="values.sum"
           :error="errors.sum"
           placeholder="Введите сумму"
           label="Сумма долга"
@@ -43,7 +53,7 @@
       </IonCol>
     </IonRow>
     <IonRow>
-      <IonCol class="add-update-debts-form-ui__actions">
+      <IonCol class="debt-form__actions">
         <IonButton type="submit">Сохранить</IonButton>
       </IonCol>
     </IonRow>
@@ -51,44 +61,69 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
 import { useRouter } from "vue-router";
-import * as yup from "yup";
+import { string, object, number, date } from "yup";
 import { toTypedSchema } from "@vee-validate/yup";
 import { useForm } from "vee-validate";
 import { InputForm } from "@/shared/ui/form/input";
 import { DatePickerForm } from "@/shared/ui/form/datePicker";
 import { InputNumberForm } from "@/shared/ui/form/inputNumber";
-import { IonButton, IonCol, IonRow } from "@ionic/vue";
+import {
+  IonButton,
+  IonCol,
+  IonRow,
+  IonSegment,
+  IonSegmentButton,
+} from "@ionic/vue";
+import { DEBT_TITLE, DEBT_TYPES } from "@/shared/api/store/debt";
+import { createDebtAsync } from "./api";
+
+interface DataForm {
+  type: DEBT_TYPES;
+  name: string;
+  startDate: null | Date;
+  endDate: null | Date;
+  sum: null | number;
+}
 
 const router = useRouter();
 
-const dataForm = reactive({
-  name: "",
-  dateStart: "",
-  dateEnd: "",
-  sum: null,
-});
-
-const schema = yup.object({
-  name: yup.string().required(),
-  dateStart: yup.string().required(),
-  dateEnd: yup.string().required(),
-  sum: yup
-    .number()
+const schema = object({
+  type: string().required(),
+  name: string().required(),
+  startDate: date().required(),
+  endDate: date().required(),
+  sum: number()
     .transform((val) => (isNaN(val) ? undefined : val))
     .required(),
 });
 
-const { errors, validate, resetForm } = useForm({
-  validationSchema: toTypedSchema(schema),
-});
+const { values, errors, validate, resetForm, useFieldModel } =
+  useForm<DataForm>({
+    validationSchema: toTypedSchema(schema),
+    initialValues: {
+      name: "",
+      type: DEBT_TYPES.took,
+      startDate: null,
+      endDate: null,
+      sum: null,
+    },
+  });
+
+const debtType = useFieldModel("type");
 
 async function onSave() {
   const { valid } = await validate();
 
-  if (valid) {
+  if (valid && values.sum && values.startDate && values.endDate) {
     try {
+      await createDebtAsync({
+        type: values.type,
+        startDate: values.startDate.toString(),
+        endDate: values.endDate.toString(),
+        sum: values.sum,
+        people: 1,
+      });
       await router.push({ name: "main" });
     } catch (error) {
       console.log(error, "error");
@@ -102,7 +137,11 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.add-update-debts-form-ui {
+.debt-form {
+  &__row-types {
+    margin-bottom: 5px;
+  }
+
   &__actions {
     display: flex;
     justify-content: flex-end;
