@@ -1,8 +1,12 @@
 import { store } from "@/shared/api";
 import { v4 as uuidv4 } from "uuid";
-import { DEBT_TYPES } from "./enums";
-import { getDebtIdx } from "./lib";
-import { Debt, DebtCreate, DebtPairStore, Debts, DebtStores } from "./types";
+import {
+  getDebtIdx,
+  getDebtOppositeIdx,
+  setDebtsinExists,
+  setDebtsOpposite,
+} from "./lib";
+import { Debt, DebtCreate, DebtStores } from "./types";
 
 export const DEBTS_STORAGE_KEY = "debts";
 
@@ -17,64 +21,34 @@ export const setDebts = async (debts: DebtStores) => {
 
 export const addDebt = async (debt: DebtCreate) => {
   const debts = (await getAllDebts()) || [];
-  const idx = getDebtIdx(debts, debt.startDate, debt.type);
+  const idx = getDebtIdx(debts, debt.startDate, debt.type, true);
   const debtStore = debts[idx];
 
-  const newDebt = { ...debt, id: uuidv4(), createdAt: new Date().toString() };
+  const newDebt: Debt = {
+    ...debt,
+    id: uuidv4(),
+    createdAt: new Date().toString(),
+  };
 
   if (!debtStore) {
-    const oppositeDebtType =
-      debt.type === DEBT_TYPES.borrowed ? DEBT_TYPES.took : DEBT_TYPES.borrowed;
-    const idxOpposite = getDebtIdx(debts, debt.startDate, oppositeDebtType);
+    const { idx: idxOpposite, type: oppositeType } = getDebtOppositeIdx(
+      newDebt,
+      debts
+    );
     const debtStoreOpposite = debts[idxOpposite];
 
-    if (!debtStoreOpposite) {
-      return setDebts([
-        ...debts,
-        {
-          id: uuidv4(),
-          dateStart: newDebt.startDate,
-          type: debt.type,
-          debts: [newDebt],
-        },
-      ]);
-    } else {
-      const newOppositeDebt = {
-        id: debtStoreOpposite.id,
-        dateStart: debtStoreOpposite.dateStart,
-        debts: {
-          [oppositeDebtType]: [...(debtStoreOpposite.debts as Debts)],
-          [debt.type]: [newDebt],
-        },
-      };
-
-      debts[idxOpposite] = newOppositeDebt as DebtPairStore;
-
-      console.log(
-        "has opposite",
+    return setDebts(
+      setDebtsOpposite(
+        newDebt,
         idxOpposite,
-        debtStoreOpposite.type,
-        oppositeDebtType,
-        newOppositeDebt,
-        "www"
-      );
-
-      return setDebts(debts);
-    }
-  } else {
-    if (debtStore.type) {
-      debtStore.debts.push({ ...newDebt });
-    } else if (!debtStore.type) {
-      debtStore.debts[newDebt.type] = {
-        ...debtStore.debts[newDebt.type],
-        ...newDebt,
-      };
-    }
-
-    debts[idx] = debtStore;
-
-    return setDebts(debts);
+        debts,
+        oppositeType,
+        debtStoreOpposite
+      )
+    );
   }
+
+  return setDebts(setDebtsinExists(debtStore, newDebt, idx, debts));
 };
 
 export const removeDebt = async (id: Debt["id"]) => {

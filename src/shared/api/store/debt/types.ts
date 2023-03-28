@@ -13,7 +13,7 @@ export interface Debt {
   endDate: string;
 }
 
-export type DebtCreate = Omit<Debt, "id" | "created_at">;
+export type DebtCreate = Omit<Debt, "id" | "createdAt">;
 
 export type Debts = Debt[];
 
