@@ -2,7 +2,7 @@
   <ListItem class="debts-item-multiple">
     <IonRow class="debts-item-multiple__row">
       <IonCol
-        v-for="(debtsTypeData, debtType) in debts"
+        v-for="(debtsTypeData, debtType) in orderDebtsType"
         :key="debtType"
         size="6"
         :class="[`debts-item-multiple--${debtType}`]"
@@ -33,7 +33,11 @@
 <script setup lang="ts">
 import { computed, unref } from "vue";
 import { IonCol, IonRow } from "@ionic/vue";
-import { DEBT_TITLES, type DebtsByType } from "@/shared/api/store/debt";
+import {
+  DEBT_TITLES,
+  DEBT_TYPES,
+  type DebtsByType,
+} from "@/shared/api/store/debt";
 import { ListItem } from "@/shared/ui/listItem";
 
 interface DebtItemMultipleProps {
@@ -42,11 +46,19 @@ interface DebtItemMultipleProps {
 
 const props = defineProps<DebtItemMultipleProps>();
 
+const tookDebts = computed(() => props.debts.took);
+const borrowedDebts = computed(() => props.debts.borrowed);
+
+const orderDebtsType = computed(() => ({
+  [DEBT_TYPES.took]: unref(tookDebts),
+  [DEBT_TYPES.borrowed]: unref(borrowedDebts),
+}));
+
 const totalTook = computed(() =>
-  props.debts.took.reduce((prev, cur) => prev + cur.sum, 0)
+  unref(tookDebts).reduce((prev, cur) => prev + cur.sum, 0)
 );
 const totalBorrowed = computed(() =>
-  props.debts.borrowed.reduce((prev, cur) => prev + cur.sum, 0)
+  unref(borrowedDebts).reduce((prev, cur) => prev + cur.sum, 0)
 );
 
 const total = computed(() => unref(totalTook) - unref(totalBorrowed));

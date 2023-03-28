@@ -1,4 +1,8 @@
-import { DebtCreate, debtStoreModel } from "@/shared/api/store/debt";
+import {
+  DebtCreate,
+  debtStoreModel,
+  DebtStores,
+} from "@/shared/api/store/debt";
 
-export const createDebtAsync = async (debt: DebtCreate) =>
+export const createDebtAsync = async (debt: DebtCreate): Promise<DebtStores> =>
   debtStoreModel.addDebt(debt);

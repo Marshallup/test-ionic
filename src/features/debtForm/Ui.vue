@@ -76,7 +76,7 @@ import {
   IonSegmentButton,
 } from "@ionic/vue";
 import { DEBT_TITLE, DEBT_TYPES } from "@/shared/api/store/debt";
-import { createDebtAsync } from "./api";
+import { useDebtStore } from "@/shared/stores/debts";
 
 interface DataForm {
   type: DEBT_TYPES;
@@ -87,6 +87,8 @@ interface DataForm {
 }
 
 const router = useRouter();
+
+const debtStore = useDebtStore();
 
 const schema = object({
   type: string().required(),
@@ -117,13 +119,14 @@ async function onSave() {
 
   if (valid && values.sum && values.startDate && values.endDate) {
     try {
-      await createDebtAsync({
+      await debtStore.createDebtStoreAsync({
         type: values.type,
         startDate: values.startDate.toString(),
         endDate: values.endDate.toString(),
         sum: values.sum,
         people: 1,
       });
+
       await router.push({ name: "main" });
     } catch (error) {
       console.log(error, "error");

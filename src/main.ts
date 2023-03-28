@@ -5,10 +5,14 @@ import router from "@/router";
 import { APP_MODE } from "@/shared/config";
 import { themeSwitcherModel } from "@/features/themeSwitcher";
 import { createStore } from "@/app/providers";
+import { createPinia } from "pinia";
 
 import "@/app/assets/styles/root.scss";
 
+const pinia = createPinia();
+
 const app = createApp(App)
+  .use(pinia)
   .use(IonicVue, {
     mode: APP_MODE,
   })
