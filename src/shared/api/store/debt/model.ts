@@ -7,7 +7,7 @@ import {
   setDebtsinExists,
   setDebtsOpposite,
 } from "./lib";
-import { Debt, DebtCreate, DebtStores, DebtStore } from "./types";
+import { Debt, DebtCreate, DebtStores } from "./types";
 
 export const DEBTS_STORAGE_KEY = "debts";
 

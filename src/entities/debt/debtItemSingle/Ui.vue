@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonCol, IonIcon, IonRow } from "@ionic/vue";
+import { IonCol, IonRow } from "@ionic/vue";
 import { computed } from "vue";
 import { ListItem } from "@/shared/ui/listItem";
 import {
