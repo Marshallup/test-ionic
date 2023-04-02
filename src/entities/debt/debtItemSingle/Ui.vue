@@ -1,5 +1,11 @@
 <template>
-  <ListItem class="debts-item" :class="{ 'debts-item--single': isSingleDebt }">
+  <ListItem
+    class="debts-item"
+    :class="{
+      'debts-item--single': isSingleDebt,
+      'debts-item--all-not-active': allNotActive,
+    }"
+  >
     <IonRow class="debts-item__row">
       <IonCol size="4" class="debts-item__col debts-item__title">
         <div>
@@ -11,6 +17,10 @@
           v-for="debt in debts"
           :key="debt.id"
           class="debts-item__people-name"
+          :class="{
+            'debts-item--active': debt.active,
+            'debts-item--not-active': !debt.active,
+          }"
         >
           {{ debt.people }}
         </div>
@@ -20,16 +30,25 @@
           v-for="debt in debts"
           :key="debt.id"
           class="debts-item__count-number"
+          :class="{
+            'debts-item--active': debt.active,
+            'debts-item--not-active': !debt.active,
+          }"
         >
-          {{ debt.sum }}
+          <span>{{ debt.sum }}</span>
+
+          <DebtActions
+            class="debts-item__actions"
+            @toggle-active="toggleActive(debt)"
+          />
         </div>
       </IonCol>
     </IonRow>
 
-    <template #footer>
-      <div v-if="!isSingleDebt" class="debts-item__footer">
+    <template #footer v-if="!isSingleDebt && !allNotActive">
+      <div class="debts-item__footer">
         <IonRow class="ion-justify-content-center">
-          <div>{{ total }}</div>
+          <div class="debts-item__total">{{ total }}</div>
         </IonRow>
       </div>
     </template>
@@ -37,9 +56,8 @@
 </template>
 
 <script setup lang="ts">
-import { IonCol, IonRow } from "@ionic/vue";
+import { IonCol, IonIcon, IonRow } from "@ionic/vue";
 import { computed } from "vue";
-// import { DebtsPeopleInfo } from "../types";
 import { ListItem } from "@/shared/ui/listItem";
 import {
   type DebtType,
@@ -47,24 +65,37 @@ import {
   DEBT_TITLE,
   DEBT_TYPES,
   DEBT_TITLES,
+  Debt,
 } from "@/shared/api/store/debt";
+import DebtActions from "../DebtActions.vue";
 
 interface DebtsItemProps {
   debts: Debts;
   type: DebtType;
 }
+interface DebtsItemEmits {
+  (e: "toggleActive", id: Debt["id"], active: Debt["active"]): void;
+}
 
 const props = defineProps<DebtsItemProps>();
+const emit = defineEmits<DebtsItemEmits>();
 
 const isSingleDebt = computed(() => props.debts.length === 1);
+
 const total = computed(() => {
   const totalSum = props.debts.reduce(
-    (prev, current) => (prev += current.sum),
+    (prev, current) => (prev += current.active ? current.sum : 0),
     0
   );
 
   return props.type === DEBT_TYPES.took ? totalSum : -totalSum;
 });
+
+const allNotActive = computed(() => props.debts.every((debt) => !debt.active));
+
+function toggleActive(debt: Debt) {
+  emit("toggleActive", debt.id, debt.active);
+}
 </script>
 
 <style lang="scss" scoped>
@@ -72,6 +103,10 @@ const total = computed(() => {
   &--single {
     .debts-item__count-number {
       font-size: 18px;
+    }
+
+    :deep(.list-item__body) {
+      margin-bottom: 0;
     }
   }
   &__footer {
@@ -101,12 +136,40 @@ const total = computed(() => {
   }
   &__count {
     &-number {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
       text-align: right;
 
       margin-bottom: var(--ion-space-2);
 
       &:last-child {
         margin-bottom: 0;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    margin-left: 10px;
+  }
+
+  &--all-not-active,
+  &--not-active {
+    color: var(--ion-color-primary-shade);
+  }
+
+  &--not-active {
+    text-decoration: line-through;
+  }
+
+  &--all-not-active {
+    :deep(.list-item__body) {
+      margin-bottom: 0;
+    }
+    .debts-item {
+      &__total {
+        text-decoration: line-through;
       }
     }
   }

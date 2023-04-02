@@ -53,6 +53,11 @@
       </IonCol>
     </IonRow>
     <IonRow>
+      <IonCol>
+        <ToggleForm name="active" v-model="values.active" label="Действующий" />
+      </IonCol>
+    </IonRow>
+    <IonRow>
       <IonCol class="debt-form__actions">
         <IonButton type="submit">Сохранить</IonButton>
       </IonCol>
@@ -77,6 +82,7 @@ import {
 } from "@ionic/vue";
 import { DEBT_TITLE, DEBT_TYPES } from "@/shared/api/store/debt";
 import { useDebtStore } from "@/shared/stores/debts";
+import { ToggleForm } from "@/shared/ui/form/toggle";
 
 interface DataForm {
   type: DEBT_TYPES;
@@ -84,6 +90,7 @@ interface DataForm {
   startDate: null | Date;
   endDate: null | Date;
   sum: null | number;
+  active: boolean;
 }
 
 const router = useRouter();
@@ -109,6 +116,7 @@ const { values, errors, validate, resetForm, useFieldModel } =
       startDate: null,
       endDate: null,
       sum: null,
+      active: true,
     },
   });
 
@@ -124,6 +132,7 @@ async function onSave() {
         startDate: values.startDate.toString(),
         endDate: values.endDate.toString(),
         sum: values.sum,
+        active: values.active,
         people: 1,
       });
 

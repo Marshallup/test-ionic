@@ -11,6 +11,24 @@ import {
   DebtType,
 } from "./types";
 
+export const getDebtByIdIdx = (id: Debt["id"], debts: DebtStores) =>
+  debts.findIndex((debt) => {
+    if (!Array.isArray(debt.debts)) {
+      const { took, borrowed } = debt.debts;
+
+      const findedTook = took.find((item) => item.id === id);
+      const findedBorrowed = borrowed.find((item) => item.id === id);
+
+      if (findedTook || findedBorrowed) {
+        return true;
+      }
+
+      return false;
+    }
+
+    return debt.debts.find((item) => item.id === id);
+  });
+
 export const getDebtIdx = (
   debts: DebtStores,
   date: string,

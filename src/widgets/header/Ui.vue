@@ -15,13 +15,13 @@
           <div
             class="header-ui__total-statistics-item header-ui__total-statistics-item--borrowed"
           >
-            -100
+            {{ total.took }}
           </div>
           <div class="header-ui__total-statistics-hr">|</div>
           <div
             class="header-ui__total-statistics-item header-ui__total-statistics-item--took"
           >
-            200
+            {{ total.borrowed }}
           </div>
         </div>
       </ion-title>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import {
   IonHeader,
   IonToolbar,
@@ -39,10 +39,18 @@ import {
   IonBackButton,
 } from "@ionic/vue";
 import { useRoute } from "vue-router";
+import { useDebtStore } from "@/shared/stores/debts";
 
 const route = useRoute();
+const debtStore = useDebtStore();
+
+const total = computed(() => debtStore.debtsTotal);
 
 const isMainPage = computed(() => route.name === "main");
+
+onMounted(() => {
+  debtStore.getDebtsAsync();
+});
 </script>
 
 <style lang="scss" scoped>

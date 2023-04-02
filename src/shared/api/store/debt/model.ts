@@ -2,11 +2,12 @@ import { store } from "@/shared/api";
 import { v4 as uuidv4 } from "uuid";
 import {
   getDebtIdx,
+  getDebtByIdIdx,
   getDebtOppositeIdx,
   setDebtsinExists,
   setDebtsOpposite,
 } from "./lib";
-import { Debt, DebtCreate, DebtStores } from "./types";
+import { Debt, DebtCreate, DebtStores, DebtStore } from "./types";
 
 export const DEBTS_STORAGE_KEY = "debts";
 
@@ -55,4 +56,38 @@ export const removeDebt = async (id: Debt["id"]) => {
   const debts = await getAllDebts();
 
   return setDebts(debts.filter((debt) => debt.id !== id));
+};
+
+export const setActiveDebt = async (id: Debt["id"], active: Debt["active"]) => {
+  const debts = await getAllDebts();
+  const debtIdx = getDebtByIdIdx(id, debts);
+
+  if (debtIdx > -1) {
+    const debtData = debts[debtIdx];
+
+    if (!Array.isArray(debtData.debts)) {
+      const { took, borrowed } = debtData.debts;
+
+      const tookData = took.find((item) => item.id === id);
+      const borrowedData = borrowed.find((item) => item.id === id);
+
+      if (tookData) {
+        tookData.active = active;
+      }
+
+      if (borrowedData) {
+        borrowedData.active = active;
+      }
+    } else {
+      const data = debtData.debts.find((item) => item.id === id);
+
+      if (data) {
+        data.active = active;
+      }
+    }
+
+    return setDebts(debts);
+  }
+
+  return debts;
 };

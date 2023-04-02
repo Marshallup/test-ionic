@@ -6,6 +6,7 @@ export type DebtType = `${DEBT_TYPES}`;
 export interface Debt {
   id: string;
   type: DebtType;
+  active: boolean;
   people: People["id"];
   sum: number;
   createdAt: string;
