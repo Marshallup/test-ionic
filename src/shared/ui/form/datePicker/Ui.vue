@@ -24,8 +24,10 @@
         <div class="date-picker-ui__modal-content">
           <IonDatetime
             v-model="datePickerValue"
+            ref="pickerRef"
             id="date"
             presentation="date"
+            :is-date-enabled="isDateEnabled"
             @ion-change="setOpenModal(false)"
           />
         </div>
@@ -47,10 +49,10 @@ import {
 } from "@ionic/vue";
 import { computed, ref, watch, toRefs, unref } from "vue";
 import { Input } from "../../input";
-import { getFormatDate } from "./lib";
+import { getFormatDate } from "@/shared/lib";
 import { useField } from "vee-validate";
 
-const format = "DD.MM.YYYY";
+const format = "dd.MM.yyyy";
 
 interface DatePickerProps {
   name: string;
@@ -58,6 +60,7 @@ interface DatePickerProps {
   label?: string;
   placeholder?: string;
   titlePicker?: string;
+  isDateEnabled?: (dateIsoString: string) => boolean;
 }
 interface DatePickerEmits {
   (e: "update:modelValue", val: DatePickerProps["modelValue"]): void;
@@ -76,12 +79,14 @@ const value = computed({
   set: (val) => emit("update:modelValue", val),
 });
 
+const pickerRef = ref<InstanceType<typeof IonDatetime> | null>(null);
+
 const datePickerValue = ref("");
 
 const isOpenModal = ref(false);
 
-const inputeValue = computed(() =>
-  getFormatDate(unref(datePickerValue), format)
+const inputeValue = computed(
+  () => getFormatDate(unref(datePickerValue), format) || ""
 );
 
 const { value: formValue, setValue } = useField(inputName, undefined, {
@@ -107,11 +112,13 @@ watch(datePickerValue, (pickerValue) => {
 });
 
 watch(formValue, (formValueClear) => {
-  value.value = formValueClear;
+  if (!formValueClear) {
+    value.value = formValueClear;
 
-  datePickerValue.value = formValueClear ? formValueClear.toString() : "";
+    datePickerValue.value = "";
 
-  emit("change", formValueClear);
+    emit("change", formValueClear);
+  }
 });
 </script>
 

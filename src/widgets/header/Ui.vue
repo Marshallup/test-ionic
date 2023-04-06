@@ -15,13 +15,13 @@
           <div
             class="header-ui__total-statistics-item header-ui__total-statistics-item--borrowed"
           >
-            {{ total.took }}
+            {{ total.borrowed }}
           </div>
           <div class="header-ui__total-statistics-hr">|</div>
           <div
             class="header-ui__total-statistics-item header-ui__total-statistics-item--took"
           >
-            {{ total.borrowed }}
+            {{ total.took }}
           </div>
         </div>
       </ion-title>

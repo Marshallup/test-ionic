@@ -21,26 +21,12 @@
         />
       </IonCol>
     </IonRow>
-    <IonRow>
-      <IonCol size="6">
-        <DatePickerForm
-          name="startDate"
-          v-model="values.startDate"
-          placeholder="ДД.ММ.ГГГГ"
-          label="Дата займа"
-          :error="errors.startDate"
-        />
-      </IonCol>
-      <IonCol size="6">
-        <DatePickerForm
-          name="endDate"
-          v-model="values.endDate"
-          placeholder="ДД.ММ.ГГГГ"
-          label="Дата возвращения"
-          :error="errors.endDate"
-        />
-      </IonCol>
-    </IonRow>
+    <DateRangePicker
+      v-model:start-value="values.startDate"
+      v-model:end-value="values.endDate"
+      :start-error="errors.startDate"
+      :end-error="errors.endDate"
+    />
     <IonRow>
       <IonCol>
         <InputNumberForm
@@ -71,7 +57,6 @@ import { string, object, number, date } from "yup";
 import { toTypedSchema } from "@vee-validate/yup";
 import { useForm } from "vee-validate";
 import { InputForm } from "@/shared/ui/form/input";
-import { DatePickerForm } from "@/shared/ui/form/datePicker";
 import { InputNumberForm } from "@/shared/ui/form/inputNumber";
 import {
   IonButton,
@@ -83,6 +68,8 @@ import {
 import { DEBT_TITLE, DEBT_TYPES } from "@/shared/api/store/debt";
 import { useDebtStore } from "@/shared/stores/debts";
 import { ToggleForm } from "@/shared/ui/form/toggle";
+import { DateRangePicker } from "@/shared/ui/form/dateRangePicker";
+import { getFormatDate } from "@/shared/lib";
 
 interface DataForm {
   type: DEBT_TYPES;
@@ -97,15 +84,34 @@ const router = useRouter();
 
 const debtStore = useDebtStore();
 
-const schema = object({
-  type: string().required(),
-  name: string().required(),
-  startDate: date().required(),
-  endDate: date().required(),
-  sum: number()
-    .transform((val) => (isNaN(val) ? undefined : val))
-    .required(),
-});
+const schema = object().shape(
+  {
+    type: string().required(),
+    name: string().required(),
+    startDate: date()
+      .required()
+      .when("endDate", (endDate, yup) => {
+        const parsedDate = getFormatDate(String(endDate));
+
+        return parsedDate
+          ? yup.max(endDate, () => `Дата не может быть больше ${parsedDate}`)
+          : yup;
+      }),
+    endDate: date()
+      .required()
+      .when("startDate", (startDate, yup) => {
+        const parsedDate = getFormatDate(String(startDate));
+
+        return parsedDate
+          ? yup.min(startDate, () => `Дата должна быть меньше ${parsedDate}`)
+          : yup;
+      }),
+    sum: number()
+      .transform((val) => (isNaN(val) ? undefined : val))
+      .required(),
+  },
+  [["startDate", "endDate"]]
+);
 
 const { values, errors, validate, resetForm, useFieldModel } =
   useForm<DataForm>({

@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import { format } from "date-fns";
 import { DEBT_TYPES } from "./enums";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -35,19 +35,19 @@ export const getDebtIdx = (
   type: DebtType,
   withPair = false
 ) => {
-  const compareFormat = "DD.MM.YYYY";
-  const dateCompare = dayjs(date).format(compareFormat);
+  const compareFormat = "dd.MM.yyyy";
+  const dateCompare = format(new Date(date), compareFormat);
 
   const debtSingleIdx = debts.findIndex(
     (debt) =>
-      dayjs(debt.dateStart).format(compareFormat) === dateCompare &&
+      format(new Date(debt.dateStart), compareFormat) === dateCompare &&
       debt.type === type
   );
 
   if (debtSingleIdx === -1 && withPair) {
     return debts.findIndex(
       (debt) =>
-        dayjs(debt.dateStart).format(compareFormat) === dateCompare &&
+        format(new Date(debt.dateStart), compareFormat) === dateCompare &&
         !debt.type &&
         debt.debts[type]
     );

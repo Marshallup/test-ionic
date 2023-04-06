@@ -12,6 +12,7 @@
         <DebtItemPair
           v-else-if="!debtItem.type && !Array.isArray(debtItem.debts)"
           :debts="debtItem.debts"
+          @toggle-active="toggleActive"
         />
       </template>
     </IonList>
