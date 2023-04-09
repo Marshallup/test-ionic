@@ -22,7 +22,7 @@
             'debts-item--not-active': !debt.active,
           }"
         >
-          {{ debt.people }}
+          {{ getPeopleName(debt.people, peoples)?.name || debt.people }}
         </div>
       </IonCol>
       <IonCol size="4" class="debts-item__col debts-item__count">
@@ -68,9 +68,12 @@ import {
   Debt,
 } from "@/shared/api/store/debt";
 import DebtActions from "../DebtActions.vue";
+import { People } from "@/shared/api/store/people";
+import { getPeopleName } from "@/shared/lib/people";
 
 interface DebtsItemProps {
   debts: Debts;
+  peoples: People[];
   type: DebtType;
 }
 interface DebtsItemEmits {

@@ -31,7 +31,12 @@
               'debts-item-multiple__item--not-active': !debtData.active,
             }"
           >
-            <div>{{ debtData.people }}:&nbsp;</div>
+            <div>
+              {{
+                getPeopleName(debtData.people, peoples)?.name ||
+                debtData.people
+              }}:&nbsp;
+            </div>
             <div class="debts-item-multiple__sum">
               <span>{{ debtData.sum }}</span>
               <DebtActions
@@ -61,9 +66,12 @@ import {
 } from "@/shared/api/store/debt";
 import { ListItem } from "@/shared/ui/listItem";
 import DebtActions from "../DebtActions.vue";
+import { People } from "@/shared/api/store/people";
+import { getPeopleName } from "@/shared/lib/people";
 
 interface DebtItemMultipleProps {
   debts: DebtsByType;
+  peoples: People[];
 }
 interface DebtItemMultipleEmits {
   (e: "toggleActive", id: Debt["id"], active: Debt["active"]): void;

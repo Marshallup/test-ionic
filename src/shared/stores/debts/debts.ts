@@ -7,8 +7,7 @@ import {
 } from "@/shared/api/store/debt";
 import { defineStore } from "pinia";
 import { loadDebtsAsync } from "@/widgets/debtList";
-import { createDebtAsync } from "@/features/debtForm/api";
-import { setActiveDebt } from "@/shared/api/store/debt/model";
+import { debtStoreModel } from "@/shared/api/store/debt";
 
 export const DEBTS_STORE_KEY = "debts";
 
@@ -57,13 +56,13 @@ export const useDebtStore = defineStore(DEBTS_STORE_KEY, () => {
   }
 
   async function createDebtStoreAsync(debt: DebtCreate) {
-    setDebtStores(await createDebtAsync(debt));
+    setDebtStores(await debtStoreModel.addDebt(debt));
 
     return unref(debts);
   }
 
   async function setDebtActiveAsync(id: Debt["id"], active: Debt["active"]) {
-    setDebtStores(await setActiveDebt(id, active));
+    setDebtStores(await debtStoreModel.setActiveDebt(id, active));
 
     return unref(debts);
   }

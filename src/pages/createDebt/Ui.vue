@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { ref, unref } from "vue";
-import { DebtForm } from "@/features/debtForm";
+import { DebtForm } from "@/widgets/debtForm";
 import { IonContent, IonPage, onIonViewDidLeave } from "@ionic/vue";
 
 const formRef = ref<InstanceType<typeof DebtForm> | null>(null);
@@ -17,7 +17,7 @@ function resetFormRef() {
   const formRefComp = unref(formRef);
 
   if (formRefComp) {
-    formRefComp.resetForm();
+    formRefComp.clearFormState();
   }
 }
 

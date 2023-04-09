@@ -6,21 +6,21 @@
       exact
       class="navigation-toolbar-ui__link"
     >
-      Главная
+      <!-- Главная -->
     </LinkIcon>
     <LinkIcon
       :to="{ name: 'createDebt' }"
       :icon="addCircleOutline"
       class="navigation-toolbar-ui__link"
     >
-      Добавить
+      <!-- Добавить -->
     </LinkIcon>
     <LinkIcon
       :to="{ name: 'settings' }"
       :icon="settingsOutline"
       class="navigation-toolbar-ui__link"
     >
-      Настройки
+      <!-- Настройки -->
     </LinkIcon>
   </IonRow>
 </template>
@@ -36,6 +36,8 @@ import { LinkIcon } from "@/shared/ui/linkIcon";
   &__link {
     user-select: none;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
 
     :deep(.link-icon__content) {
       font-size: 12px;

@@ -13,8 +13,4 @@ import { IonFooter, IonGrid, IonToolbar } from "@ionic/vue";
 import { NavigationToolbar } from "@/features/navigationToolbar";
 </script>
 
-<style lang="scss" scoped>
-.footer-ui {
-  padding: 0 4px;
-}
-</style>
+<style lang="scss" scoped></style>

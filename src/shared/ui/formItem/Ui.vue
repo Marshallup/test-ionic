@@ -1,5 +1,5 @@
 <template>
-  <IonItem ref="ionItemRef" class="form-item">
+  <IonItem ref="ionItemRef" class="form-item" lines="none">
     <IonLabel v-if="label" position="stacked">{{ label }}</IonLabel>
     <slot />
     <IonNote

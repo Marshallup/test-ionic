@@ -1,4 +1,7 @@
 export interface People {
-  id: number;
+  id: string;
   name: string;
+  createdAt: string;
 }
+
+export type PeopleCreate = Pick<People, "name">;

@@ -6,12 +6,14 @@
         <DebtItemSingle
           v-if="debtItem.type && Array.isArray(debtItem.debts)"
           :debts="debtItem.debts"
+          :peoples="peoples"
           :type="debtItem.type"
           @toggle-active="toggleActive"
         />
         <DebtItemPair
           v-else-if="!debtItem.type && !Array.isArray(debtItem.debts)"
           :debts="debtItem.debts"
+          :peoples="peoples"
           @toggle-active="toggleActive"
         />
       </template>
@@ -27,10 +29,13 @@ import { DebtItemSingle } from "@/entities/debt/debtItemSingle";
 import { DebtItemPair } from "@/entities/debt/debtItemPair";
 import { useDebtStore } from "@/shared/stores/debts";
 import { Debt } from "@/shared/api/store/debt";
+import { usePeoplesStore } from "@/shared/stores/peoples";
 
 const debtStore = useDebtStore();
+const peopleStore = usePeoplesStore();
 
 const { debts } = storeToRefs(debtStore);
+const { peoples } = storeToRefs(peopleStore);
 
 async function toggleActive(id: Debt["id"], active: Debt["active"]) {
   await debtStore.setDebtActiveAsync(id, !active);
@@ -38,6 +43,7 @@ async function toggleActive(id: Debt["id"], active: Debt["active"]) {
 
 onMounted(() => {
   debtStore.getDebtsAsync();
+  peopleStore.getPeoplesAsync();
 });
 </script>
 

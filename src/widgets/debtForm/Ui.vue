@@ -12,12 +12,12 @@
     </IonRow>
     <IonRow>
       <IonCol>
-        <InputForm
-          name="name"
-          v-model="values.name"
-          label="Заемщик"
-          :error="errors.name"
-          placeholder="Введите имя"
+        <SelectPeople
+          ref="selectPeopleRef"
+          v-model="values.people"
+          name="people"
+          :label="DEBT_TITLE[debtType]"
+          :error="errors.people"
         />
       </IonCol>
     </IonRow>
@@ -52,11 +52,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref, unref } from "vue";
 import { useRouter } from "vue-router";
 import { string, object, number, date } from "yup";
 import { toTypedSchema } from "@vee-validate/yup";
 import { useForm } from "vee-validate";
-import { InputForm } from "@/shared/ui/form/input";
 import { InputNumberForm } from "@/shared/ui/form/inputNumber";
 import {
   IonButton,
@@ -70,10 +70,12 @@ import { useDebtStore } from "@/shared/stores/debts";
 import { ToggleForm } from "@/shared/ui/form/toggle";
 import { DateRangePicker } from "@/shared/ui/form/dateRangePicker";
 import { getFormatDate } from "@/shared/lib";
+import { SelectPeople } from "@/features/selectPeople";
+import { People } from "@/shared/api/store/people";
 
 interface DataForm {
   type: DEBT_TYPES;
-  name: string;
+  people: People | null;
   startDate: null | Date;
   endDate: null | Date;
   sum: null | number;
@@ -84,10 +86,12 @@ const router = useRouter();
 
 const debtStore = useDebtStore();
 
+const selectPeopleRef = ref<InstanceType<typeof SelectPeople> | null>(null);
+
 const schema = object().shape(
   {
     type: string().required(),
-    name: string().required(),
+    people: object<DataForm["people"]>().nullable().required(),
     startDate: date()
       .required()
       .when("endDate", (endDate, yup) => {
@@ -117,7 +121,7 @@ const { values, errors, validate, resetForm, useFieldModel } =
   useForm<DataForm>({
     validationSchema: toTypedSchema(schema),
     initialValues: {
-      name: "",
+      people: null,
       type: DEBT_TYPES.took,
       startDate: null,
       endDate: null,
@@ -133,24 +137,36 @@ async function onSave() {
 
   if (valid && values.sum && values.startDate && values.endDate) {
     try {
-      await debtStore.createDebtStoreAsync({
-        type: values.type,
-        startDate: values.startDate.toString(),
-        endDate: values.endDate.toString(),
-        sum: values.sum,
-        active: values.active,
-        people: 1,
-      });
+      if (values.people) {
+        await debtStore.createDebtStoreAsync({
+          type: values.type,
+          startDate: values.startDate.toString(),
+          endDate: values.endDate.toString(),
+          sum: values.sum,
+          active: values.active,
+          people: values.people.id,
+        });
 
-      await router.push({ name: "main" });
+        await router.push({ name: "main" });
+      }
     } catch (error) {
       console.log(error, "error");
     }
   }
 }
 
+function clearFormState() {
+  const selectPeopleRefVal = unref(selectPeopleRef);
+
+  if (selectPeopleRefVal) {
+    selectPeopleRefVal.clearSearchStr();
+  }
+
+  resetForm();
+}
+
 defineExpose({
-  resetForm,
+  clearFormState,
 });
 </script>
 
